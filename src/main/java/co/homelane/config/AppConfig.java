@@ -13,8 +13,7 @@ import java.util.TimeZone;
  */
 @ComponentScan(basePackages = {"co.tide.homelane"})
 @Import({
-        DbConfig.class,
-        SwaggerConfig.class
+        DbConfig.class
 })
 @EnableConfigurationProperties(BookingNotificationProperties.class)
 public class AppConfig {

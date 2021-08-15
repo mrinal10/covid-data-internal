@@ -21,70 +21,25 @@ public class DataController {
         this.dataService = dataService;
     }
 
-    @ApiOperation(value = "Get all date specific data")
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Success"
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = "Unauthorized"
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = "Unable to process request."
-            )
-    })
+
     @GetMapping("/on-date/{date}")
-    public DateWiseData getDateSpecificdata(@ApiParam(value = "date",
-            example = "2016-12-16 YYYY-MM-DD format", required = true)
+    public DateWiseData getDateSpecificdata(
     @NotBlank(message = "date cannot be blank.")
     @PathVariable("date") String date) {
         return dataService.searchDateSpecificData(date);
     }
 
-    @ApiOperation(value = "Get all state specific data")
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Success"
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = "Unauthorized"
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = "Unable to process request."
-            )
-    })
+
     @GetMapping("/of-state/{state}")
-    public StateWiseData getStateSpecificdata(@ApiParam(value = "state name",
-            example = "West Bengal", required = true)
+    public StateWiseData getStateSpecificdata(
     @NotBlank(message = "state name cannot be blank.")
     @PathVariable("state") String state) {
         return dataService.searchStateSpecificData(state);
     }
 
-    @ApiOperation(value = "Get state and date specific data")
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Success"
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = "Unauthorized"
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = "Unable to process request."
-            )
-    })
+
     @GetMapping("/of-state/{state}/on/{date}")
-    public StateDateWiseData getStateSpecificdata(@ApiParam(value = "state name",
-            example = "West Bengal", required = true)
+    public StateDateWiseData getStateSpecificdata(
     @NotBlank(message = "state name cannot be blank.")
     @PathVariable("state") String state, @PathVariable("date") String date) {
         return dataService.searchDateAndStateSpecificData(state, date);
