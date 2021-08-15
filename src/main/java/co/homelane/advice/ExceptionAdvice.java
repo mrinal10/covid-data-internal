@@ -13,22 +13,5 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 @Order(HIGHEST_PRECEDENCE)
 public class ExceptionAdvice {
 
-    /*@Autowired
-    public ExceptionAdvice(FieldErrorsProcessor fieldErrorsProcessor,
-            TideServicePropertiesV3 serviceProperties,
-            MessageProvider messageProvider) {
-        super(fieldErrorsProcessor, serviceProperties, messageProvider);
-    }
-
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
-        String message = ex.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
-
-        return new ResponseEntity<>(Responses.error(ResponseStatus.BAD_REQUEST.getText(),
-                ResponseStatus.BAD_REQUEST.getCode(), message),
-                HttpStatus.BAD_REQUEST);
-    }*/
 
 }

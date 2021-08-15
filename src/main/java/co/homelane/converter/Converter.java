@@ -27,6 +27,7 @@ public class Converter {
 
     private InfectionData getInfectionData(Covid_19IndiaRecord statewiseInfectiondetails) {
         return InfectionData.builder()
+                .sno(getSanitizedData(statewiseInfectiondetails.getSno()))
                 .date(getSanitizedData(statewiseInfectiondetails.getDate()))
                 .confirmed(getSanitizedData(statewiseInfectiondetails.getConfirmed()))
                 .time(getSanitizedData(statewiseInfectiondetails.getTime()))

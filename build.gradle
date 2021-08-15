@@ -72,6 +72,8 @@ dependencies {
     testRuntimeOnly(libraries.jUnit5Params)
     testImplementation(libraries.mockitoJunit5)
     testImplementation(libraries.wiremock)
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.5.2'
+
 
 }
 
