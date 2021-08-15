@@ -11,7 +11,7 @@ import java.util.TimeZone;
 /**
  * General configuration of the application.
  */
-@ComponentScan(basePackages = {"co.homelane"})
+@ComponentScan(basePackages = {"co.tide.homelane"})
 @Import({
         DbConfig.class
 })
