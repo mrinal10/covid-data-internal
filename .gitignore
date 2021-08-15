@@ -22,3 +22,10 @@ build/libs/covid-data-processor-1.0-SNAPSHOT.jar
 *.txt
 *.class
 *.class
+build/classes/java/main/co/homelane/advice/ExceptionAdvice.class
+build/classes/java/main/co/homelane/api/data/DataController.class
+build/classes/java/main/co/homelane/Application.class
+build/classes/java/main/co/homelane/config/AppConfig.class
+build/classes/java/main/co/homelane/config/CustomObjectMapperConfig.class
+build/libs/covid-data-processor-1.0-SNAPSHOT.jar
+build/tmp/compileJava/source-classes-mapping.txt
