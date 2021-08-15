@@ -1,0 +1,187 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.4'
+    id 'org.sonarqube' version '3.1.1'
+    id 'jacoco'
+    id 'nu.studer.jooq' version '5.2.1'
+}
+
+apply from: 'libraries.gradle'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'co.homelane'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2020.0.1'
+    }
+}
+
+// Replace version suggested by Spring Boot with version we use to generate code.
+// https://github.com/etiennestuder/gradle-jooq-plugin/blob/master/README.md#defining-the-jooq-version-when-the-spring-boot-plugin-is-applied
+ext['jooq.version'] = ext['jooqVersion']
+
+dependencies {
+    // Database driver for jOOQ
+    jooqGenerator(libraries.postgres)
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    // Spring dependencies
+    implementation(libraries.springBootStarterWeb)
+    implementation(libraries.springBootActuator)
+    implementation(libraries.springFoxStarter)
+    implementation(libraries.springCloudAwsMessaging)
+    implementation(libraries.springCloudOpenFeign)
+    implementation(libraries.openfeignHttpClient)
+    implementation(libraries.openfeignCore)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Database dependencies
+    implementation(libraries.springBootStarterJdbc)
+    implementation(libraries.hikari)
+    implementation(libraries.liquibase)
+    implementation(libraries.jooq)
+    runtimeOnly(libraries.postgres)
+
+    // Tide dependencies
+    implementation(libraries.guava)
+
+    // ApiDocs dependencies
+    implementation(libraries.swagger)
+
+    // Test
+    testImplementation(libraries.springBootStarterTest)
+    testImplementation(libraries.jUnit5Api)
+    testRuntimeOnly(libraries.jUnit5Engine)
+    testRuntimeOnly(libraries.jUnit5Params)
+    testImplementation(libraries.mockitoJunit5)
+    testImplementation(libraries.wiremock)
+
+}
+
+jacocoTestReport {
+    executionData.setFrom(fileTree("$buildDir/jacoco/").include("**.exec"))
+    classDirectories.setFrom(files(project.sourceSets.main.output))
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: 'co/homelane/db/jooq/**')
+        }))
+    }
+}
+
+sonarqube {
+    def sonarExclusions = "src/generated-db-entities/**, src/main/java/co/tide/homelane/config/**, src/main/java/co/tide/homelane/security/annotations/**, src/main/java/co/tide/marketplace/adapter/security/Roles.java"
+    properties {
+        property "sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.exclusions", "${sonarExclusions}"
+    }
+}
+
+task unitTest(type: Test) {
+    useJUnitPlatform {
+        include '**/*UTest.class'
+    }
+    failFast = true
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform {
+        include '**/*ITest.class'
+    }
+    failFast = true
+}
+
+task apiTest(type: Test) {
+    useJUnitPlatform {
+        include '**/*ApiTest.class'
+    }
+    failFast = true
+}
+
+bootRun {
+    // The profile can be passed as ./gradlew clean bootRun -Dspring.profiles.active=dev
+    systemProperties['spring.profiles.active'] = project.gradle.startParameter.systemPropertiesArgs['spring.profiles.active']
+}
+
+task jooqGen {
+    dependsOn += 'generateJooq'
+}
+
+
+jooq {
+    version = libraries.jooqVersion
+
+    configurations {
+        main {
+            // We don't want jOOQ to run on every compile.
+            generateSchemaSourceOnCompilation = false
+            generationTool {
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://127.0.0.1:5432/homelane'
+                    user = 'postgres'
+                    password = ''
+                    properties {
+                        property {
+                            // No need for SSL on localhost when generating sources, so it's ok to suppress the warnings
+                            key = 'useSSL'
+                            value = 'false'
+                        }
+                    }
+                }
+
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        outputSchemaToDefault = true
+                        excludes = 'DATABASECHANGELOG|DATABASECHANGELOGLOCK'
+                    }
+
+                    generate {
+                        relations = false
+                        deprecated = false
+                        records = true
+                        pojos = true
+                        daos = true
+                        springAnnotations = true
+                        javaTimeTypes = true
+                        fluentSetters = true
+                        pojosEqualsAndHashCode = true
+                    }
+
+                    target {
+                        packageName = 'co.homelane.db.jooq'
+                        directory = 'src/generated-db-entities/java/'
+                    }
+                }
+            }
+        }
+    }
+}
+
+

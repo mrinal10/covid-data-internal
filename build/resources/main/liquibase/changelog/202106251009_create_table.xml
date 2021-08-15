@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="20210625_create_booking_notification_table" author="Mrinal Mondal">
+        <sql dbms="postgresql" splitStatements="true" stripComments="true">
+            <![CDATA[
+                CREATE TABLE StatewiseTestingDetails (
+                     date          TIMESTAMP(3)      NOT NULL,
+                     state         VARCHAR(100)       NOT NULL,
+                    TotalSamples        float,
+                    Negative                   int,
+                    Positive               float
+                );
+           ]]>
+        </sql>
+    </changeSet>
+    <changeSet id="20210725_create_table2" author="Mrinal Mondal">
+        <sql dbms="postgresql" splitStatements="true" stripComments="true">
+            <![CDATA[
+                CREATE TABLE covid_19_india (
+                Sno	                          VARCHAR(100),
+                Date	                        TIMESTAMP(3)      NOT NULL,
+                Time	                        VARCHAR(100),
+                State_UnionTerritory	        VARCHAR(100),
+                ConfirmedIndianNational	      VARCHAR(100),
+                ConfirmedForeignNational	    VARCHAR(100),
+                Cured	                        VARCHAR(100),
+                Deaths	                      VARCHAR(100),
+                Confirmed                     VARCHAR(100)
+                );
+           ]]>
+        </sql>
+    </changeSet>
+    <changeSet id="20210725_create_table3" author="Mrinal Mondal">
+        <sql dbms="postgresql" splitStatements="true" stripComments="true">
+            <![CDATA[
+                CREATE TABLE covid_vaccine_statewise (
+                Updated_On                               TIMESTAMP(3)      NOT NULL,
+               	State	                                   VARCHAR(100),
+               	Total_Doses_Administered	               VARCHAR(100),
+               	Total_Sessions_Conducted	               VARCHAR(100),
+               	Total_Sites 	                           VARCHAR(100),
+               	First_Dose_Administered	                 VARCHAR(100),
+               	Second_Dose_Administered	               VARCHAR(100),
+               	Male_Individuals_Vaccinated	             VARCHAR(100),
+               	Female_Individuals_Vaccinated	           VARCHAR(100),
+               	Transgender_Individuals_Vaccinated	     VARCHAR(100),
+               	Total_Covaxin_Administered	             VARCHAR(100),
+               	Total_CoviShield_Administered	           VARCHAR(100),
+               	Total_Sputnik_V_Administered	           VARCHAR(100),
+               	AEFI	                                   VARCHAR(100),
+               	age_18_45_years	                         VARCHAR(100),
+               	age_45_60_years	                         VARCHAR(100),
+               	age_60_above_years	                     VARCHAR(100),
+               	Total_Individuals_Vaccinated             VARCHAR(100)
+                );
+           ]]>
+        </sql>
+    </changeSet>
+</databaseChangeLog>
